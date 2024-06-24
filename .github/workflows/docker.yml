@@ -28,13 +28,15 @@ jobs:
       - name: Check if image exists
         id: check_image
         run: |
-          if docker manifest inspect shenlw/morphic:${{ env.VERSION_TAG }} > /dev/null 2>&1; then
-            echo "Image already exists, skipping build"
+          echo "Checking for image: shenlw/morphic:${{ env.VERSION_TAG }}"
+          if docker pull shenlw/morphic:${{ env.VERSION_TAG }} > /dev/null 2>&1; then
+            echo "Image shenlw/morphic:${{ env.VERSION_TAG }} already exists"
             echo "IMAGE_EXISTS=true" >> $GITHUB_ENV
           else
-            echo "Image does not exist, proceeding with build"
+            echo "Image shenlw/morphic:${{ env.VERSION_TAG }} does not exist"
             echo "IMAGE_EXISTS=false" >> $GITHUB_ENV
           fi
+          echo "IMAGE_EXISTS=${{ env.IMAGE_EXISTS }}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
