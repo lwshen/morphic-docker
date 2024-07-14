@@ -34,9 +34,9 @@ RUN git clone --depth=1 --branch ${GIT_TAG} -c advice.detachedHead=false https:/
   rm -rf /app/.git && \
   cd /app && \
   npm install && \
-  npx next telemetry disable && \
-  cp .env.local.example .env.local
+  npx next telemetry disable
 COPY next.config.mjs /app/next.config.mjs
+COPY .env.local /app/.env.local
 RUN npm run build
 
 
