@@ -10,8 +10,8 @@ WORKDIR /app
 RUN pnpm add sharp
 
 
-# FROM oven/bun:1.1.3-debian AS builder
-FROM node:20 AS builder
+FROM oven/bun:1.1.24-debian AS builder
+# FROM node:20 AS builder
 
 ARG GIT_TAG=main
 
@@ -22,22 +22,23 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# RUN git clone --depth=1 --branch ${GIT_TAG} https://github.com/miurla/morphic /app && \
-#   rm -rf /app/.git && \
-#   cd /app && \
-#   bun install && \
-#   bun next telemetry disable
-# COPY morphic/next.config.mjs /app/next.config.mjs
-# RUN bun run build
-
-RUN git clone --depth=1 --branch ${GIT_TAG} -c advice.detachedHead=false https://github.com/miurla/morphic /app && \
+RUN git clone --depth=1 --branch ${GIT_TAG} -c advice.detachedHead=false  https://github.com/miurla/morphic /app && \
   rm -rf /app/.git && \
   cd /app && \
-  npm install && \
-  npx next telemetry disable
+  bun install && \
+  bun next telemetry disable
 COPY next.config.mjs /app/next.config.mjs
 COPY .env.local /app/.env.local
-RUN npm run build
+RUN bun run build
+
+# RUN git clone --depth=1 --branch ${GIT_TAG} -c advice.detachedHead=false https://github.com/miurla/morphic /app && \
+#   rm -rf /app/.git && \
+#   cd /app && \
+#   npm install && \
+#   npx next telemetry disable
+# COPY next.config.mjs /app/next.config.mjs
+# COPY .env.local /app/.env.local
+# RUN npm run build
 
 
 # Production image, copy all the files and run next
