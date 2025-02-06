@@ -1,5 +1,5 @@
 ## Sharp dependencies, copy all the files for production
-FROM node:20-slim AS sharp
+FROM node:22-slim AS sharp
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -10,8 +10,8 @@ WORKDIR /app
 RUN pnpm add sharp
 
 
-FROM oven/bun:1.1.24-debian AS builder
-# FROM node:20 AS builder
+FROM oven/bun:1.2-debian AS builder
+# FROM node:22 AS builder
 
 ARG GIT_TAG=main
 
@@ -42,7 +42,7 @@ RUN bun run build
 
 
 # Production image, copy all the files and run next
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
