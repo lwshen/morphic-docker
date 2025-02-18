@@ -1,8 +1,8 @@
 ## Sharp dependencies, copy all the files for production
 FROM node:22-slim AS sharp
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PNPM_HOME "/pnpm"
+ENV PATH "$PNPM_HOME:$PATH"
 RUN npm install -g pnpm
 
 WORKDIR /app
