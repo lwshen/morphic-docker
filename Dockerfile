@@ -10,21 +10,24 @@ WORKDIR /app
 RUN pnpm add sharp
 
 
-FROM oven/bun:1.2-debian AS builder
-# FROM node:22 AS builder
+FROM bitnami/git AS source
 
 ARG GIT_TAG=main
 
 WORKDIR /app
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends --reinstall git ca-certificates \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN git clone --depth=1 --branch ${GIT_TAG} -c advice.detachedHead=false https://github.com/miurla/morphic /app && \
+  rm -rf /app/.git
 
-RUN git clone --depth=1 --branch ${GIT_TAG} -c advice.detachedHead=false  https://github.com/miurla/morphic /app && \
-  rm -rf /app/.git && \
-  cd /app && \
+
+FROM oven/bun:1.2-debian AS builder
+# FROM node:22 AS builder
+
+WORKDIR /app
+
+COPY --from=source /app /app
+
+RUN cd /app && \
   bun install && \
   bun next telemetry disable
 COPY next.config.mjs /app/next.config.mjs
