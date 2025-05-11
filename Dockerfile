@@ -15,7 +15,7 @@ FROM oven/bun:1.2-debian AS builder
 WORKDIR /app
 
 COPY --from=source /app/package.json ./
-COPY --from=source /app/bun.lockb ./
+COPY --from=source /app/bun.lock ./
 
 RUN bun install
 
